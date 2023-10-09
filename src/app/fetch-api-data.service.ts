@@ -121,6 +121,12 @@ export class FetchApiDataService {
       .pipe(map(this.extractResponseData), catchError(this.handleError));
   }
 
+  isFavoriteMovie(movieID: string): boolean {
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    // Check if the movieID exists in the user's list of FavoriteMovies
+    return user.FavoriteMovies?.includes(movieID) || false;
+  }
+
   // Making the api call for the Delete favorite movie endpoint
   deleteFavoriteMovie(movieID: string): Observable<any> {
     const token = localStorage.getItem('token');
