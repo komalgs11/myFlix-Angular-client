@@ -1,13 +1,2 @@
-<div class="main-page">
-  <h1>
-    Welcome to myFlix!
-  </h1>
-  <div class="button-wrapper">
-    <button Mat-raised-button color="primary" (click)="openUserRegistrationDialog()" style="margin-right: 10px;">
-      Sign Up
-    </button>
-    <button mat-raised-button (click)="openUserLoginDialog()" style="margin-right: 10px;" color="primary">
-      Login
-    </button>
-  </div>
-</div>
+<!-- this lets Angular know which component to show for the selected route. -->
+<router-outlet></router-outlet>
