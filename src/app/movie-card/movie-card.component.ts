@@ -31,7 +31,7 @@ export class MovieCardComponent implements OnInit {
     });
   }
 
-  getGenre(genre: any): void {
+  getGenreDialog(genre: any): void {
     this.dialog.open(MovieDescriptionComponent, {
       data: {
         title: genre.Name,
@@ -40,27 +40,27 @@ export class MovieCardComponent implements OnInit {
     });
   }
 
-  getDirector(director: any): void {
+  getDirectorDialog(director: any): void {
     this.dialog.open(MovieDescriptionComponent, {
       data: {
         title: director.Name,
-        Born: director.Born,
+        born: director.Born,
         content: director.Bio,
       },
     });
   }
 
-  getSynopsis(description: string): void {
+  getSynopsisDialog(synopsis: string): void {
     this.dialog.open(MovieDescriptionComponent, {
       data: {
         title: 'Description',
-        content: description,
+        content: synopsis,
       },
     });
   }
 
   addFavorite(id: string): void {
-    this.fetchApiData.addFavoriteMovie(id).subscribe((Response: any) => {
+    this.fetchApiData.addFavoriteMovie(id).subscribe(() => {
       this.snackBar.open('added to favorites', 'ok', {
         duration: 2000,
       });
@@ -72,7 +72,7 @@ export class MovieCardComponent implements OnInit {
   }
 
   removeFavorite(id: string): void {
-    this.fetchApiData.deleteFavoriteMovie(id).subscribe((Response: any) => {
+    this.fetchApiData.deleteFavoriteMovie(id).subscribe(() => {
       this.snackBar.open('removed from favorites', 'ok', {
         duration: 2000,
       });
