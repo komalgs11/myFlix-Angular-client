@@ -1,26 +1,17 @@
 <!DOCTYPE html>
 
 <div class="profile-page">
-  <div class="info">
-    <h1>My Profile</h1>
-    <p>Username : {{user.Username}}</p>
-    <p>Email : {{user.Email}}</p>
-
-    <h2>favorite movies</h2>
-    <div *ngIf="favoriteMovies.length === 0">
-      <p> list is empty</p>
-    </div>
-    <mat-list>
-      <mat-list-item *ngFor="let movie of favoriteMovies">
-        <img src={{movie.ImageURL}}>
-      </mat-list-item>
-    </mat-list>
-  </div>
+  <h1 class="profile-title">My profile</h1>
+  <mat-card>
+    <mat-card-header>Profile Details</mat-card-header>
+    <mat-card-content>Username : {{user.Username}}</mat-card-content>
+    <mat-card-content>Email : {{user.Email}}</mat-card-content>
+  </mat-card>
   <mat-card>
     <mat-card-content>
       <form class="profile-form">
 
-        <h1>update profile</h1>
+        <h1>Update Profile Details</h1>
 
         <mat-form-field>
           <input matInput [(ngModel)]="userData.Username" placeholder="Username" type="text" name="Username" required>
@@ -38,13 +29,23 @@
       </form>
     </mat-card-content>
     <mat-card-actions>
-      <button mat-raised-button (click)="editUser()" style="margin-right: 10px;" color="primary">
-        Update
+      <button mat-raised-button (click)="updateUser()" style="margin-right: 10px;" color="primary">
+        Update Information
       </button>
 
-      <button mat-raised-button (click)="deleteUser()" style="margin-right: 10px;" color="primary">
-        Delete Account
+      <button mat-raised-button (click)="deleteUserProfile()" style="margin-right: 10px;" color="primary">
+        Delete Your Account
       </button>
     </mat-card-actions>
   </mat-card>
+
+  <div class="movie-card-div">
+    <h1>Your Favorite Movies</h1>
+    <mat-card *ngFor="let movie of favoriteMovies; let i = index">
+      <mat-card-header>
+        <mat-card-title>{{ movie.Title }}</mat-card-title>
+      </mat-card-header>
+      <img src="{{ movie.ImageURL }}" alt="{{ movie.Title }}" class="movie-card-image" />
+    </mat-card>
+  </div>
 </div>

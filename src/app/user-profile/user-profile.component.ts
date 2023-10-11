@@ -9,9 +9,8 @@ import { Router } from '@angular/router';
   styleUrls: ['./user-profile.component.scss'],
 })
 export class UserProfileComponent implements OnInit {
-  user: any = {};
-
-  favoriteMovies: any[] = [];
+  user: any = '';
+  favoriteMovies: any = '';
 
   @Input() userData = { Username: '', Password: '', Email: '', BirthDate: '' };
 
@@ -22,53 +21,75 @@ export class UserProfileComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.getUser(); // get user gets all the users data to display it.
+    this.getUser(); //get user gets all the users data to display it.
+    this.getFavoriteList();
+  }
+
+  getFavoriteList(): void {
+    this.fetchApiData.getFavoriteMovies().subscribe(
+      (favMovieIDs: any) => {
+        if (favMovieIDs) {
+          this.favoriteMovies = favMovieIDs;
+          this.fetchApiData.getAllMovies().subscribe((movies: any) => {
+            this.favoriteMovies = movies.filter((movie: any) => {
+              return this.favoriteMovies.includes(movie._id);
+            });
+          });
+        } else {
+          this.favoriteMovies = 'No favorite movies yet';
+        }
+      },
+      (error) => {
+        console.error('Error fetching favorite movies:', error);
+      }
+    );
   }
 
   getUser(): void {
-    this.fetchApiData.getOneUser().subscribe((response: any) => {
-      this.user = response;
-      this.userData.Username = this.user.Username;
-      this.userData.Email = this.user.Email;
-
-      this.fetchApiData.getAllMovies().subscribe((response: any) => {
-        this.favoriteMovies = response.filter(
-          (movie: { _id: any }) =>
-            this.user.favoriteMovies.indexOf(movie._id) >= 0
-        );
-      });
-    });
+    this.fetchApiData.getUser().subscribe(
+      (response: any) => {
+        this.user = response;
+      },
+      (error) => {
+        console.error('Error fetching user data:', error);
+      }
+    );
   }
 
-  editUser(): void {
+  updateUser(): void {
     this.fetchApiData.editUser(this.userData).subscribe(
-      (data) => {
-        localStorage.setItem('user', JSON.stringify(data));
-        localStorage.setItem('Username', data.Username);
-
+      (response) => {
+        localStorage.setItem('user', JSON.stringify(response));
         this.snackBar.open('User has been updated', 'OK', {
           duration: 2000,
         });
-        window.location.reload();
       },
-      (result) => {
-        this.snackBar.open(result, 'ok', {
+      (error) => {
+        console.error('Error updating user:', error);
+        this.snackBar.open('Error updating user. Please try again.', 'ok', {
           duration: 2000,
         });
       }
     );
   }
 
-  deleteUser(): void {
-    if (confirm('Are you sure?')) {
-      this.router.navigate(['welcome']).then(() => {
-        this.snackBar.open('Account Deleted successfully', 'ok', {
-          duration: 2000,
-        });
-      });
-      this.fetchApiData.deleteUser().subscribe((result) => {
-        localStorage.clear();
-      });
+  deleteUserProfile(): void {
+    if (confirm('Are you sure you want to delete your account?')) {
+      this.fetchApiData.deleteUser().subscribe(
+        () => {
+          localStorage.clear();
+          this.router.navigate(['welcome']);
+          this.snackBar.open('Account Deleted successfully', 'OK', {
+            duration: 2000,
+          });
+        },
+        (error) => {
+          console.error('Error deleting user:', error);
+          this.snackBar.open('Error deleting user. Please try again.', 'OK', {
+            duration: 2000,
+          });
+        }
+      );
     }
   }
 }
