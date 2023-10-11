@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <!-- *ngFor directive is being used to display all returned movies , ("movies" refers)movies variable declared in the component file.-->
 
 <div *ngIf="movies.length === 0" class="moviecard-container">
@@ -25,15 +24,13 @@
           Synopsis
         </button>
 
-        <!-- <button *ngIf="!isFavorite(movie._id)" mat-icon-button (click)="addFavorite(movie._id)"
-          matTooltip="Add to favorites">
-          <mat-icon>favorite_border</mat-icon>
+        <button *ngIf="!isFavorite(movie._id) === false; else elseBlock">
+          <mat-icon (click)="addFavorite(movie._id)">favorite_border</mat-icon>
         </button>
 
-        <button *ngIf="isFavorite(movie._id)" mat-icon-button (click)="removeFavorite(movie._id)"
-          matTooltip="Remove from favorites">
-          <mat-icon>favorite</mat-icon>
-        </button> -->
+        <ng-template #elseBlock>
+          <mat-icon (click)="removeFavorite(movie._id)">favorite_border</mat-icon>
+        </ng-template>
       </mat-card-actions>
     </mat-card>
   </div>

@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FetchApiDataService } from '../fetch-api-data.service';
 import { MovieDescriptionComponent } from '../movie-description/movie-description.component';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-movie-card',
@@ -11,15 +10,17 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class MovieCardComponent implements OnInit {
   movies: any[] = [];
+  favoriteMovies: any[] = [];
+
   constructor(
     public fetchApiData: FetchApiDataService,
-    public dialog: MatDialog,
-    public snackBar: MatSnackBar
+    public dialog: MatDialog
   ) {}
 
   //ngOnInit() is called when Angular is done creating the component.
   ngOnInit(): void {
     this.getMovies();
+    this.getFavoriteList();
   }
 
   //is implemented to fetch the movies from the FetchApiDataService service with the help of getAllMovies()
@@ -59,23 +60,49 @@ export class MovieCardComponent implements OnInit {
     });
   }
 
-  addFavorite(id: string): void {
-    this.fetchApiData.addFavoriteMovie(id).subscribe(() => {
-      this.snackBar.open('added to favorites', 'ok', {
-        duration: 2000,
-      });
-    });
+  getFavoriteList(): void {
+    this.fetchApiData.getFavoriteMovies().subscribe(
+      (favMovieIDs: any) => {
+        if (favMovieIDs) {
+          this.favoriteMovies = favMovieIDs;
+        } else {
+          this.favoriteMovies = [];
+        }
+      },
+      (error) => {
+        console.error('Error fetching favorite movies:', error);
+        this.favoriteMovies = [];
+      }
+    );
   }
 
   isFavorite(id: string): boolean {
-    return this.fetchApiData.isFavoriteMovie(id);
+    if (this.favoriteMovies.includes(id)) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
-  removeFavorite(id: string): void {
-    this.fetchApiData.deleteFavoriteMovie(id).subscribe(() => {
-      this.snackBar.open('removed from favorites', 'ok', {
-        duration: 2000,
-      });
+  addFavorite(movieID: string): void {
+    this.fetchApiData.addFavoriteMovie(movieID).subscribe((response: any) => {
+      this.favoriteMovies = response;
+      console.log(this.favoriteMovies);
+
+      this.getFavoriteList();
+      return this.favoriteMovies;
     });
+  }
+
+  removeFavorite(movieID: string): void {
+    this.fetchApiData
+      .deleteFavoriteMovie(movieID)
+      .subscribe((response: any) => {
+        this.favoriteMovies = response;
+        console.log(this.favoriteMovies);
+
+        this.getFavoriteList();
+        return this.favoriteMovies;
+      });
   }
 }
