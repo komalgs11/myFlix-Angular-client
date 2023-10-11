@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 })
 export class NavBarComponent {
   constructor(
-    private router: Router,
+    public router: Router,
     public fetchApiData: FetchApiDataService
   ) {}
 

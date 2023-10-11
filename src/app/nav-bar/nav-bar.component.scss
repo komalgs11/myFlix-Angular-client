@@ -2,8 +2,24 @@
   position: sticky;
   top: 0;
   z-index: 1000;
+  background-color: #530e0e;
+}
+a {
+  color: #fff;
+  font-size: 28px;
+  margin-right: 10px;
+  text-decoration: none;
 }
 
+h2 {
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
 .example-spacer {
   flex: 1 1 auto;
+}
+
+button {
+  color: #fff;
 }
