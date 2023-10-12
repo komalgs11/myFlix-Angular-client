@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FetchApiDataService } from '../fetch-api-data.service';
 import { MovieDescriptionComponent } from '../movie-description/movie-description.component';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-movie-card',
@@ -10,17 +12,22 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class MovieCardComponent implements OnInit {
   movies: any[] = [];
-  favoriteMovies: any[] = [];
 
   constructor(
     public fetchApiData: FetchApiDataService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    public snackBar: MatSnackBar,
+    public router: Router
   ) {}
 
   //ngOnInit() is called when Angular is done creating the component.
   ngOnInit(): void {
+    const user = localStorage.getItem('user');
+    if (!user) {
+      this.router.navigate(['welcome']);
+      return;
+    }
     this.getMovies();
-    this.getFavoriteList();
   }
 
   //is implemented to fetch the movies from the FetchApiDataService service with the help of getAllMovies()
@@ -60,49 +67,23 @@ export class MovieCardComponent implements OnInit {
     });
   }
 
-  getFavoriteList(): void {
-    this.fetchApiData.getFavoriteMovies().subscribe(
-      (favMovieIDs: any) => {
-        if (favMovieIDs) {
-          this.favoriteMovies = favMovieIDs;
-        } else {
-          this.favoriteMovies = [];
-        }
-      },
-      (error) => {
-        console.error('Error fetching favorite movies:', error);
-        this.favoriteMovies = [];
-      }
-    );
-  }
-
-  isFavorite(id: string): boolean {
-    if (this.favoriteMovies.includes(id)) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  addFavorite(movieID: string): void {
-    this.fetchApiData.addFavoriteMovie(movieID).subscribe((response: any) => {
-      this.favoriteMovies = response;
-      console.log(this.favoriteMovies);
-
-      this.getFavoriteList();
-      return this.favoriteMovies;
+  addFavorite(movieId: string): void {
+    this.fetchApiData.addFavoriteMovie(movieId).subscribe(() => {
+      this.snackBar.open('added to favorites', 'OK', {
+        duration: 2000,
+      });
     });
   }
 
-  removeFavorite(movieID: string): void {
-    this.fetchApiData
-      .deleteFavoriteMovie(movieID)
-      .subscribe((response: any) => {
-        this.favoriteMovies = response;
-        console.log(this.favoriteMovies);
+  isFavorite(Id: string): boolean {
+    return this.fetchApiData.isFavoriteMovie(Id);
+  }
 
-        this.getFavoriteList();
-        return this.favoriteMovies;
+  removeFavorite(Id: string): void {
+    this.fetchApiData.removeFavoriteMovie(Id).subscribe(() => {
+      this.snackBar.open('remove from favorites', 'OK', {
+        duration: 2000,
       });
+    });
   }
 }
