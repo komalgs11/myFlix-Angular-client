@@ -3,93 +3,74 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { FetchApiDataService } from '../fetch-api-data.service';
 import { Router } from '@angular/router';
 
+type User = {
+  _id?: string;
+  Username?: string;
+  Password?: string;
+  Email?: string;
+  favoriteMovies?: [];
+};
+
 @Component({
   selector: 'app-user-profile',
   templateUrl: './user-profile.component.html',
   styleUrls: ['./user-profile.component.scss'],
 })
 export class UserProfileComponent implements OnInit {
-  user: any = '';
-  favoriteMovies: any = '';
+  user: User = {};
 
   @Input() userData = { Username: '', Password: '', Email: '', BirthDate: '' };
 
   constructor(
     public fetchApiData: FetchApiDataService,
     public snackBar: MatSnackBar,
-    private router: Router
+    public router: Router
   ) {}
 
   ngOnInit(): void {
-    this.getUser(); //get user gets all the users data to display it.
-    this.getFavoriteList();
+    //get user gets all the users data to display it.
+    const user = this.getUser();
+    if (!user._id) {
+      this.router.navigate(['welcome']);
+      return;
+    }
+
+    this.user = user;
+    console.log(this.user);
+    this.userData = {
+      Username: user.Username || '',
+      Email: user.Email || '',
+      Password: '',
+      BirthDate: '',
+    };
   }
 
-  getFavoriteList(): void {
-    this.fetchApiData.getFavoriteMovies().subscribe(
-      (favMovieIDs: any) => {
-        if (favMovieIDs) {
-          this.favoriteMovies = favMovieIDs;
-          this.fetchApiData.getAllMovies().subscribe((movies: any) => {
-            this.favoriteMovies = movies.filter((movie: any) => {
-              return this.favoriteMovies.includes(movie._id);
-            });
-          });
-        } else {
-          this.favoriteMovies = 'No favorite movies yet';
-        }
-      },
-      (error) => {
-        console.error('Error fetching favorite movies:', error);
-      }
-    );
-  }
-
-  getUser(): void {
-    this.fetchApiData.getUser().subscribe(
-      (response: any) => {
-        this.user = response;
-      },
-      (error) => {
-        console.error('Error fetching user data:', error);
-      }
-    );
+  getUser(): User {
+    return JSON.parse(localStorage.getItem('user') || '{}');
   }
 
   updateUser(): void {
-    this.fetchApiData.editUser(this.userData).subscribe(
-      (response) => {
-        localStorage.setItem('user', JSON.stringify(response));
-        this.snackBar.open('User has been updated', 'OK', {
-          duration: 2000,
-        });
-      },
-      (error) => {
-        console.error('Error updating user:', error);
-        this.snackBar.open('Error updating user. Please try again.', 'ok', {
-          duration: 2000,
-        });
-      }
-    );
+    this.fetchApiData.editUser(this.userData).subscribe((response) => {
+      console.log(response);
+      localStorage.setItem('user', JSON.stringify(response));
+      this.user = response;
+      this.snackBar.open('User has been updated', 'OK', {
+        duration: 2000,
+      });
+    });
   }
 
   deleteUserProfile(): void {
     if (confirm('Are you sure you want to delete your account?')) {
-      this.fetchApiData.deleteUser().subscribe(
-        () => {
-          localStorage.clear();
-          this.router.navigate(['welcome']);
-          this.snackBar.open('Account Deleted successfully', 'OK', {
-            duration: 2000,
-          });
-        },
-        (error) => {
-          console.error('Error deleting user:', error);
-          this.snackBar.open('Error deleting user. Please try again.', 'OK', {
-            duration: 2000,
-          });
-        }
-      );
+      this.router.navigate(['welcome']).then(() => {
+        this.snackBar.open('Account Deleted successfully', 'OK', {
+          duration: 2000,
+        });
+      });
+      this.fetchApiData.deleteUser().subscribe((result) => {
+        console.log(result);
+        localStorage.clear();
+      });
     }
   }
 }
