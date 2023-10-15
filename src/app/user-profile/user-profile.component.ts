@@ -11,6 +11,9 @@ type User = {
   favoriteMovies?: [];
 };
 
+/**
+ * Component for displaying the user profile and managing user data.
+ */
 @Component({
   selector: 'app-user-profile',
   templateUrl: './user-profile.component.html',
@@ -28,7 +31,7 @@ export class UserProfileComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    //get user gets all the users data to display it.
+    // Get user data to display the user's profile.
     const user = this.getUser();
     if (!user._id) {
       this.router.navigate(['welcome']);
@@ -45,10 +48,19 @@ export class UserProfileComponent implements OnInit {
     };
   }
 
+  /**
+   * Retrieves user data from local storage.
+   *
+   * @returns The user data retrieved from local storage.
+   */
+
   getUser(): User {
     return JSON.parse(localStorage.getItem('user') || '{}');
   }
 
+  /**
+   * Updates the user's profile data.
+   */
   updateUser(): void {
     this.fetchApiData.editUser(this.userData).subscribe((response) => {
       console.log(response);
@@ -60,6 +72,9 @@ export class UserProfileComponent implements OnInit {
     });
   }
 
+  /**
+   * Deletes the user's account after confirmation.
+   */
   deleteUserProfile(): void {
     if (confirm('Are you sure you want to delete your account?')) {
       this.router.navigate(['welcome']).then(() => {

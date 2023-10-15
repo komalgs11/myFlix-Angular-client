@@ -1,6 +1,10 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
+/**
+ * Component for displaying a movie description dialog.
+ */
+
 @Component({
   selector: 'app-movie-description',
   templateUrl: './movie-description.component.html',
@@ -8,7 +12,11 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 })
 export class MovieDescriptionComponent implements OnInit {
   constructor(
-    /** get data from movie-card api call to pass to html **/
+    /**
+     * Injects data from the movie-card API call to pass to the HTML template.
+     *
+     * @param data - An object containing title, born, and content for the movie description.
+     */
     @Inject(MAT_DIALOG_DATA)
     public data: {
       title: string;
