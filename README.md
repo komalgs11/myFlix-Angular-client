@@ -1,6 +1,19 @@
 # MyFlixAngularClient
 
+The myFlix Angular application was created with Angular and TypeScript.It is the client-side application for a previously completed React application called myFlix based on its existing server-side code.
+
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.2.4.
+
+## Key Features
+- Your app should display a welcome view where users will be able to either log in or register an
+account.
+- Once authenticated, the user should now view all movies.
+- Upon clicking on a particular movie, users will be taken to a single movie view, where
+  additional movie details will be displayed. The single movie view will contain the following
+- A button that when clicked takes a user to the director view, where details about the
+director of that particular movie will be displayed.
+- A button that when clicked takes a user to the genre view, where details about that
+particular genre of the movie will be displayed.
 
 ## Development server
 
@@ -10,18 +23,16 @@ Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The appli
 
 Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
-## Build
+## Technologies used
+- Typescript
+- Angular
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+## screenshots
 
-## Running unit tests
+<img width="1438" alt="Screenshot 2023-10-15 at 16 24 09" src="https://github.com/komalgs11/myFlix-Angular-client/assets/126813272/acf16e43-4223-40e4-9da6-41e539b9daf7">
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+<img width="1440" alt="Screenshot 2023-10-15 at 16 25 37" src="https://github.com/komalgs11/myFlix-Angular-client/assets/126813272/b44b6368-aea9-4735-baf7-069abed5cd71">
 
-## Running end-to-end tests
+<img width="1440" alt="Screenshot 2023-10-15 at 16 28 48" src="https://github.com/komalgs11/myFlix-Angular-client/assets/126813272/850ff3a0-1d49-470c-b166-4762929769f8">
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
 
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
